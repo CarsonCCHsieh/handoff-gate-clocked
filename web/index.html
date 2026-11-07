@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="description" content="A synthetic support-handoff preview with privacy, instruction and script review gates.">
+  <title>交接閘門 · Handoff Gate</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#workspace" data-i18n="skip">跳至工作區</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#" aria-label="Handoff Gate">
+        <span class="brand-symbol" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span><strong data-i18n="brand">交接閘門</strong><small>HANDOFF GATE</small></span>
+      </a>
+      <div class="header-actions">
+        <span class="local-label"><span class="status-dot"></span><span data-i18n="localOnly">本機 · 合成案例</span></span>
+        <div class="language-switch" role="group" aria-label="Language / 語言">
+          <button type="button" id="lang-zh" aria-pressed="true">中文</button>
+          <button type="button" id="lang-en" aria-pressed="false">EN</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero page-width" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">A LITTLE FRICTION. A BETTER HANDOFF.</p>
+        <h1 id="hero-title" data-i18n="headline">安全交接，先過閘門。</h1>
+        <p class="hero-description" data-i18n="intro">把有用的事件資訊留下，把個資、越權指令與危險腳本攔下。三道檢查，一個清楚的交接決定。</p>
+      </div>
+      <div class="hero-flow" aria-label="Three review stages">
+        <div><span>01</span><strong data-i18n="privacyShort">遮蔽個資</strong></div>
+        <b aria-hidden="true">→</b>
+        <div><span>02</span><strong data-i18n="guardShort">辨識指令</strong></div>
+        <b aria-hidden="true">→</b>
+        <div><span>03</span><strong data-i18n="scriptShort">檢視腳本</strong></div>
+      </div>
+    </section>
+
+    <div class="preview-notice page-width" id="mode-notice" role="note">
+      <span class="notice-icon" aria-hidden="true">◎</span>
+      <p><strong id="mode-notice-title">人工重播預覽</strong><span id="mode-notice-copy">這是人工編寫的合成示例，並非真實 API 回應或實測證據。</span></p>
+      <span class="outline-tag" id="mode-tag">REPLAY</span>
+    </div>
+
+    <section class="workspace page-width" id="workspace" aria-label="Handoff workbench">
+      <aside class="case-panel" aria-labelledby="case-heading">
+        <div class="section-heading"><span class="section-number">01 /</span><h2 id="case-heading" data-i18n="chooseCase">挑選合成案例</h2></div>
+        <p class="section-intro" data-i18n="caseIntro">五種情境，觀察同一份交接如何通過、待審，或被攔下。</p>
+        <div class="case-list" id="case-list" role="group" aria-label="Synthetic cases"></div>
+        <div class="fixture-note"><span aria-hidden="true">◇</span><p data-i18n="fixtureNote">所有姓名、聯絡方式與事件內容皆為合成資料；只接受固定案例。</p></div>
+      </aside>
+
+      <div class="work-area">
+        <section class="control-panel" aria-labelledby="review-heading">
+          <div class="control-header"><div><p class="eyebrow" data-i18n="reviewEyebrow">REVIEW, THEN HAND OFF</p><h2 id="review-heading" data-i18n="startReview">檢視這次交接</h2></div><span class="connection-pill" id="connection-status">連線中</span></div>
+          <div class="mode-controls">
+            <div class="mode-switch" role="group" aria-label="Analysis mode">
+              <button type="button" id="mode-replay" aria-pressed="true"><span data-i18n="replayMode">人工重播</span><small data-i18n="noKey">無需金鑰</small></button>
+              <button type="button" id="mode-live" aria-pressed="false" disabled><span data-i18n="liveMode">真實 API</span><small id="live-caption">未啟用</small></button>
+            </div>
+            <p class="mode-help" id="mode-help"></p>
+          </div>
+          <label class="live-consent" id="live-consent-wrap" hidden><input type="checkbox" id="live-consent"><span data-i18n="liveConsent">我確認僅傳送所選合成案例；這會呼叫三個外部 API，可能消耗服務額度。</span></label>
+          <div class="action-row"><p id="selected-summary" class="selected-summary"></p><button class="primary-button" id="analyze-button" type="button" disabled><span id="analyze-label">檢查合成案例</span><span class="button-arrow" aria-hidden="true">↗</span></button></div>
+          <div class="working-status" id="working-status" role="status" aria-live="polite" hidden><span class="spinner" aria-hidden="true"></span><span id="working-copy"></span></div>
+          <p class="safe-error" id="request-error" role="alert" hidden></p>
+        </section>
+
+        <section class="result-panel" aria-labelledby="result-heading">
+          <div class="section-heading result-heading"><span class="section-number">02 /</span><h2 id="result-heading" data-i18n="gateDecision">交接決定</h2><span class="result-mode-tag" id="result-mode-tag" hidden></span></div>
+          <div class="gate-banner gate-idle" id="gate-banner" role="status" aria-live="polite">
+            <span class="gate-icon" id="gate-icon" aria-hidden="true">—</span>
+            <div><p class="gate-kicker" id="gate-kicker">AWAITING REVIEW</p><h3 id="gate-title">先選一個案例</h3><p id="gate-description">檢查完成後，這裡會顯示可交接、需要覆核或停止交接。</p></div>
+            <button class="download-button" id="download-button" type="button" hidden><span aria-hidden="true">↓</span><span data-i18n="download">下載已遮蔽交接</span></button>
+          </div>
+          <ul class="reason-list" id="reason-list" hidden></ul>
+          <div class="endpoint-grid" id="endpoint-grid">
+            <article class="endpoint-card" id="pii-card"><div class="endpoint-top"><span class="endpoint-index">01</span><span class="endpoint-state" id="pii-state">待檢查</span></div><h3 data-i18n="privacyTitle">個資遮蔽</h3><p class="endpoint-name">/clocked/pii</p><p class="endpoint-value" id="pii-value">—</p><p class="endpoint-description" id="pii-description"></p></article>
+            <article class="endpoint-card" id="guard-card"><div class="endpoint-top"><span class="endpoint-index">02</span><span class="endpoint-state" id="guard-state">待檢查</span></div><h3 data-i18n="guardTitle">指令邊界</h3><p class="endpoint-name">/clocked/injection</p><p class="endpoint-value" id="guard-value">—</p><p class="endpoint-description" id="guard-description"></p></article>
+            <article class="endpoint-card" id="inspect-card"><div class="endpoint-top"><span class="endpoint-index">03</span><span class="endpoint-state" id="inspect-state">待檢查</span></div><h3 data-i18n="scriptTitle">腳本意圖</h3><p class="endpoint-name">/clocked/script</p><p class="endpoint-value" id="inspect-value">—</p><p class="endpoint-description" id="inspect-description"></p></article>
+          </div>
+          <div class="result-meta" id="result-meta" hidden><p id="provenance"></p><p id="usage"></p></div>
+          <ul class="warning-list" id="warning-list" hidden></ul>
+        </section>
+
+        <section class="comparison-panel" aria-labelledby="comparison-heading">
+          <div class="section-heading"><span class="section-number">03 /</span><h2 id="comparison-heading" data-i18n="comparison">原文與遮蔽對照</h2></div>
+          <p class="comparison-help" data-i18n="comparisonHelp">原文僅供本機比較。指令辨識接收遮蔽後的內容；只有通過閘門的交接摘要可下載。</p>
+          <div class="comparison-grid"><div class="text-pane"><div class="pane-heading"><h3 data-i18n="original">合成原文</h3><span class="pane-label" data-i18n="localCompare">僅供對照</span></div><pre id="original-text" class="case-text empty-text">選擇案例並開始檢查。</pre></div><div class="text-pane sanitized-pane"><div class="pane-heading"><h3 data-i18n="sanitized">遮蔽後內容</h3><span class="pane-label" id="redacted-label">尚無結果</span></div><pre id="redacted-text" class="case-text empty-text">通過有效遮蔽後顯示。</pre></div></div>
+          <div class="finding-row" id="finding-row" hidden></div>
+          <details class="evidence-details" id="evidence-details"><summary data-i18n="evidenceTitle">檢視依據與腳本原始碼</summary><div class="evidence-content"><p class="script-caution" data-i18n="scriptCaution">腳本只作靜態檢視，永不執行。</p><h4 data-i18n="approvedScope">固定授權範圍</h4><p id="scope-text" class="scope-text">—</p><h4 data-i18n="proposedScript">合成建議腳本</h4><pre id="script-text" class="script-text">—</pre><div class="evidence-columns"><div><h4 data-i18n="guardEvidence">指令辨識依據</h4><ul id="guard-evidence" class="evidence-list"></ul></div><div><h4 data-i18n="scriptEvidence">腳本檢視依據</h4><ul id="inspect-evidence" class="evidence-list"></ul></div></div></div></details>
+        </section>
+      </div>
+    </section>
+  </main>
+  <footer class="page-width site-footer"><span class="footer-brand">HG /</span><p data-i18n="footer">交接閘門提供檢視輔助，無法保證安全。所有指令與腳本皆不會被執行。</p><span class="footer-caption">BUILT FOR THE MOMENT BEFORE SEND.</span></footer>
+</body>
+</html>
