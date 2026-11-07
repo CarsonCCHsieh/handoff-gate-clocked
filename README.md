@@ -16,10 +16,10 @@ The three signals change both the gate and what can be shared. Detection is fall
 Python 3.13, standard library only. From this directory:
 
 ```text
-python server.py --port 8787
+python server.py --port 0
 ```
 
-Open http://127.0.0.1:8787/. The server binds to loopback. The interface supports English and Traditional Chinese. Select one of five bundled fictional cases; arbitrary text and file uploads are intentionally unavailable in this challenge preview.
+Open the http://127.0.0.1:<port>/ address printed by the process. Port 0 asks the operating system for an available local port; the server binds to loopback. The interface supports English and Traditional Chinese. Select one of five bundled fictional cases; arbitrary text and file uploads are intentionally unavailable in this challenge preview.
 
 ## Honest replay and live modes
 
