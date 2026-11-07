@@ -1,0 +1,68 @@
+1
+00:00:00,000 --> 00:00:05,000
+A support handoff needs the incident facts,
+not every personal detail or instruction.
+
+2
+00:00:05,000 --> 00:00:09,000
+This is Handoff Gate.
+
+3
+00:00:09,000 --> 00:00:15,000
+Clocked Protect identifies sensitive spans.
+The app validates their positions and transformation.
+
+4
+00:00:15,000 --> 00:00:21,000
+Only transformed text moves on
+to the instruction check.
+
+5
+00:00:21,000 --> 00:00:27,000
+Guard treats the ticket as untrusted content,
+checked against a fixed support scope.
+
+6
+00:00:27,000 --> 00:00:33,000
+A ticket cannot approve itself
+or override the application permissions.
+
+7
+00:00:33,000 --> 00:00:39,000
+Inspect assesses the proposed script
+without running it.
+
+8
+00:00:39,000 --> 00:00:46,000
+A benign ticket cannot overrule
+a risky recovery command.
+
+9
+00:00:46,000 --> 00:00:52,000
+Export opens only when the transformation
+and both risk results meet the local policy.
+
+10
+00:00:52,000 --> 00:00:59,000
+Share redacted facts and a decision summary,
+not original contact values or script source.
+
+11
+00:00:59,000 --> 00:01:05,000
+Uncertain, malformed or failed results
+require human review.
+
+12
+00:01:05,000 --> 00:01:10,000
+Authored replay is labelled separately.
+It is never presented as a live result.
+
+13
+00:01:10,000 --> 00:01:15,000
+Three Clocked integrations.
+English and Traditional Chinese views.
+
+14
+00:01:15,000 --> 00:01:20,000
+Fictional examples. No script execution.
+Human responsibility.

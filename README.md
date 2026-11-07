@@ -1,50 +1,69 @@
 # Handoff Gate · 交接閘門
 
-A new, synthetic-data-only support handoff reviewer for the Clocked Build Challenge, started 7 November 2026. It separates useful incident facts from personal information, attempts to redirect an assistant, and unsafe proposed recovery scripts.
+**Redact the ticket. Check its instructions. Review its script. Decide what can be shared.**
 
-## What the prototype does
+Support handoffs mix useful incident facts with personal information, untrusted instructions and proposed recovery commands. Handoff Gate turns those different signals into an explicit **ready**, **review** or **blocked** decision. It supports a human reviewer and never executes the proposed script.
 
-1. Protect identifies sensitive spans and produces a transformed copy.
-2. Guard screens that transformed copy, using the fixed approved support scope rather than trusting ticket instructions.
-3. Inspect assesses the proposed script as text. No script is ever executed.
-4. A local policy turns these results into ready, review, or blocked. Missing, uncertain, malformed, or failed results require review. Only a ready result can produce a sanitized handoff report.
+Created for the Clocked Build Challenge, starting 7 November 2026. The interface is available in English and Traditional Chinese. All examples are fictional.
 
-The three signals change both the gate and what can be shared. Detection is fallible; a ready report is not a security guarantee or approval to execute a command.
+## Three APIs that change the workflow
 
-## Run locally
+| Stage | Clocked endpoint | What changes in the application |
+| --- | --- | --- |
+| Protect | `/clocked/pii` | Sensitive spans and the transformation are validated; only transformed text can reach Guard. |
+| Guard | `/clocked/injection` | A fixed support scope is applied to the untrusted handoff. Risk, verdict and source evidence affect export. |
+| Inspect | `/clocked/script` | The proposed script is classified as text. Its separate risk signals can block or hold a handoff. |
 
-Python 3.13, standard library only. From this directory:
+The final gate is local application policy, not a model instruction. A ready result requires a valid transformation and acceptable results from both risk checks. Harmful signals block export. Uncertainty, missing fields, malformed data and service failures require review. A ready result is not a security guarantee or permission to run a command.
+
+## Run the workbench
+
+Python 3.13 and its standard library are sufficient. No package installation is required.
 
 ```text
 python server.py --port 0
 ```
 
-Open the http://127.0.0.1:<port>/ address printed by the process. Port 0 asks the operating system for an available local port; the server binds to loopback. The interface supports English and Traditional Chinese. Select one of five bundled fictional cases; arbitrary text and file uploads are intentionally unavailable in this challenge preview.
+Open the `http://127.0.0.1:<port>/` URL printed by the process. The server binds only to loopback and serves local assets. Choose one of five bundled synthetic cases. Arbitrary text and file uploads are intentionally outside this challenge preview.
 
-## Honest replay and live modes
+### Authored replay
 
-Replay uses manually authored illustrative responses. It is not an actual Clocked response, accuracy measurement, or live integration proof. The UI labels it throughout.
+The complete preview works without a key. Its responses are manually authored illustrations and are labelled **AUTHORED SYNTHETIC — NOT LIVE**. They are not recorded API results or a model-accuracy benchmark.
 
-Live mode is implemented against the published Clocked contracts and requires a separately authorized server-only CLOCKED_API_KEY. Only the same bundled synthetic cases can be sent. No key belongs in frontend files, browser storage, screenshots, command arguments, Git, or a shared report. Live validation has not yet occurred. A missing key never silently falls back to a successful replay. Do not enable paid plans or overage.
+| Case | Authored policy demonstration |
+| --- | --- |
+| Routine service incident | Ready, with a sanitized report |
+| Untrusted instructions | Blocked |
+| Unsafe recovery script | Blocked |
+| Uncertain intent | Human review |
+| Provider unavailable | Human review; no successful fallback |
 
-## Evaluation
+### Live mode
 
-The cases cover an ordinary incident, prompt injection, unsafe script, uncertainty, and provider failure. Tests exercise policy boundaries and transport behavior with local stubs; they do not establish model accuracy. After running them, preserve the actual test receipt outside the public source package.
+Provide your own Clocked key through the backend environment variable `CLOCKED_API_KEY`, then start the server. Do not paste a key into frontend code, browser storage, URLs, command arguments or Git. Live mode sends only the same bundled fictional cases. The interface labels live responses separately and never substitutes an authored success for a failed API call.
+
+Requests are made to the fixed Clocked HTTPS endpoints. Guard receives the locally validated transformed text. Responses are checked for type, finite scores and exact source positions. An unknown outcome retains its logical request identity and stops automatic duplication. Use only the allowance you have authorized; a failed request is not a reason to enable paid usage.
+
+## What can be shared
+
+Only a ready handoff offers a download. Its report contains transformed incident facts and the gate summary. It does not include original entity values, the raw API response, proposed script source or an API key. Detection can miss information; this prototype is a review aid with a narrow synthetic input boundary.
+
+## Observed live integration
+
+Three synthetic cases completed nine real Clocked API calls. The routine case reached ready and produced a checked sanitized report; an instruction-injection case was blocked by Guard, and an unsafe recovery-script case was blocked by Inspect. Each case used Protect, Guard and Inspect. The video shows the actual resulting application screenshots.
+
+The displayed percentages are model risk signals, not accuracy. Three examples are a narrow integration check and do not establish general security performance or production reliability. Uncertainty and provider failure are demonstrated separately with authored replay/offline cases; no real provider outage is claimed.
+
+## Local checks
 
 ```text
 python -m unittest discover -s tests -v
 ```
 
-## Data and scope
+The tests use local fixtures and stub transports. They exercise redaction and span validation, policy boundaries, provider failures, unresolved requests and loopback HTTP restrictions. These checks do not establish model accuracy or production suitability.
 
-All names, addresses, and incident details are fictional. The service may retain response data; synthetic-only operation is a deliberate data boundary. Original Protect values are not part of the shareable report. No external script, case link, or proposed command is followed or run. All UI assets are local.
+## Credits
 
-## Challenge materials
+Built by CC with AI-assisted coding, interface design and writing. The application core and interface were newly created for this challenge. Python standard library, local HTML/CSS/JavaScript and system fonts are used; no prior hackathon application was repurposed.
 
-The official challenge requires a new application, a public repository with development history, and a working demo or short application-use video. This directory is private preparation, not a formal entry. There is no registration or submission receipt yet.
-
-- [Official challenge](https://clocked.rezolve.ai/challenge)
-- [Official rules](https://clocked.rezolve.ai/build-challenge/rules)
-- [Protect](https://clocked.rezolve.ai/docs/pii), [Guard](https://clocked.rezolve.ai/docs/injection), [Inspect](https://clocked.rezolve.ai/docs/script)
-
-Built by CC with AI-assisted implementation. Original application code and interface were created for this challenge; Python standard library and system fonts are the only dependencies.
+[Clocked challenge](https://clocked.rezolve.ai/challenge) · [Protect](https://clocked.rezolve.ai/docs/pii) · [Guard](https://clocked.rezolve.ai/docs/injection) · [Inspect](https://clocked.rezolve.ai/docs/script)
